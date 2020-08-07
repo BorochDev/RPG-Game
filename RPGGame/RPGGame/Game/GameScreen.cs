@@ -171,13 +171,13 @@ namespace RPGGame.Game
                         Travel(player);
                         break;
                     case 2:
-                        
+                        Build(player);
                         break;
                     case 3:
-                        
+                        Rest(player);
                         break;
                     case 4:
-                        
+                        OpenBackpack(player);
                         break;
                     case 5:
                         
@@ -255,6 +255,12 @@ namespace RPGGame.Game
             ShowBasicData(player.HealthPoints, player.StaminaPoints, player.Level);
             //wprowadzenie podziału na przedmiowy konsumpcyjne oraz wyposażenie
 
+        }
+        private static void SaveGame(Player player)
+        {
+            //pokazanie pól zapisów 1-5 z odczytem poziomu zapisanych postaci
+            //w razie pustego zapisu napis "puste"
+            
         }
 
     }

@@ -4,14 +4,14 @@ using System.Text;
 
 namespace RPGGame.Game
 {
-    class GameSave
+    public static class GameSave
     {
-        public Character GetSave(int SaveNumber)
+        public static Player GetSave(int SaveNumber)
         {
             //odczytywanie zapisanej postaci z pliku txt
-            return new Character();
+            return new Player();
         }
-        public void AddSave(int SaveNumber, Character character)
+        public static void AddSave(int SaveNumber, Player player)
         {
             //dodawanie zapisu do pliku txt
         }

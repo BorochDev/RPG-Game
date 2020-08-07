@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPGGame.Game;
+using System;
 
 namespace RPGGame
 {
@@ -6,7 +7,7 @@ namespace RPGGame
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            GameScreen.Start();
         }
     }
 }

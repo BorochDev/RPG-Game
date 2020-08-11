@@ -1,13 +1,17 @@
 ﻿using RPGGame.Game;
 using System;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RPGGame
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            GameScreen.Start();
+            GameScreen Game = new GameScreen();
+            Game.Start();
         }
     }
 }

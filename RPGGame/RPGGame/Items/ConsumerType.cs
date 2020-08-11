@@ -7,7 +7,6 @@ namespace RPGGame
     public enum ConsumerType
     {
         of_consumer,
-        to_weapon,
         neutral
     }
 }

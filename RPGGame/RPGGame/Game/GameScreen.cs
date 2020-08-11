@@ -1,267 +1,224 @@
-﻿using RPGGame.Places;
+﻿using RPGGame.Characters;
+using RPGGame.Items;
+using RPGGame.Places;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace RPGGame.Game
 {
-    public static class GameScreen
+    public class GameScreen
     {
-        private static Place[] places = new Place[6];
-
-        private static bool isParsed = false;
-        private static bool endGame = false;
-
-        private static int Choice;
+        readonly PlaceService placeService;
+        readonly PlayerService playerService;
+        readonly GameService gameService;
         
 
-        public static void Start()
-        {
-            //tworzy dostępne lokacje
-            #region AddPlacesTable
-            places[0] = new Place()
-            {
-                Name = "Wielkie stawy",
-                StaminaUse = 5,
-                PrefereLevel = 1,
-                EnemyType = EnemyState.friendly,
-                IsAnimal = false,
-                IsMine = false,
-                IsPlant = true,
-                IsWater = true,
-                IsWood = false,
-                IsZoneX = false
-            };
-            places[1] = new Place()
-            {
-                Name = "Górska przełęcz",
-                StaminaUse = 10,
-                PrefereLevel = 2,
-                EnemyType = EnemyState.friendly,
-                IsAnimal = false,
-                IsMine = true,
-                IsPlant = false,
-                IsWater = false,
-                IsWood = true,
-                IsZoneX = false
-            };
-            places[2] = new Place()
-            {
-                Name = "Bagna",
-                StaminaUse = 20,
-                PrefereLevel = 4,
-                EnemyType = EnemyState.neutral,
-                IsAnimal = true,
-                IsMine = false,
-                IsPlant = true,
-                IsWater = true,
-                IsWood = false,
-                IsZoneX = false
-            };
-            places[3] = new Place()
-            {
-                Name = "Serce Lasu",
-                StaminaUse = 15,
-                PrefereLevel = 7,
-                EnemyType = EnemyState.aggressive,
-                IsAnimal = true,
-                IsMine = false,
-                IsPlant = true,
-                IsWater = false,
-                IsWood = true,
-                IsZoneX = false
-            };
-            places[4] = new Place()
-            {
-                Name = "Mroczna jaskinia",
-                StaminaUse = 15,
-                PrefereLevel = 10,
-                EnemyType = EnemyState.aggressive,
-                IsAnimal = true,
-                IsMine = true,
-                IsPlant = false,
-                IsWater = false,
-                IsWood = false,
-                IsZoneX = false
-            };
-            places[5] = new Place()
-            {
-                Name = "Strefa X",
-                StaminaUse = 25,
-                PrefereLevel = 10,
-                EnemyType = EnemyState.dead,
-                IsAnimal = false,
-                IsMine = false,
-                IsPlant = false,
-                IsWater = false,
-                IsWood = false,
-                IsZoneX = true
-            };
-            #endregion
+        private bool isParsed = false;
+        private bool endGame = false;
+        private bool endAction = false;
 
+        private int StaminaUse;
+
+        public GameScreen()
+        {
+            placeService = new PlaceService();
+            playerService = new PlayerService();
+            gameService = new GameService();
+            
+        }
+
+        public void Start()
+        {
             //pokazuje napisy początkowe i wprowadzenie do gry
             do
             {
                 Console.WriteLine("Witaj w świecie wspaniałych przygód i wielu niebezpieczeństw.");
                 Console.WriteLine("Mam nadzieję, że nie zginiesz tak łatwo!");
-                Console.WriteLine("1) Nowa gra");
-                Console.WriteLine("2) Wczytaj postać");
 
                 Console.WriteLine();
 
-                switch (GetIntKeyDown(1,2))
-                {
-                    case 1:
-                        Console.Write("Podaj swoje imie poszukiwaczu: ");
-                        Player player = new Player()
-                        {
-                            Name = Console.ReadLine().ToString(),
-                            HealthPoints = 100,
-                            StaminaPoints = 100,
-                            Level = 1,
-                            ArmorPoints = 0,
-                            ExperiencePoints = 0,
-                            Agility = 10,
-                            Strength = 10,
-                            Intelligence = 10,
-                            ArmamentBackpack = null,
-                            ConsumerBackpack = null
-                        };
-                        isParsed = true;
-                        MainScreen(player);
-                        break;
-
-                    case 2:
-                        Console.WriteLine("Opcja chwilowo niedostępna");
-                        Console.ReadKey();
-                        break;
-
-                    default:
-                        Console.WriteLine("Nie ma takiej opcji, wybierz jeszcze raz");
-                        Console.ReadKey();
-                        break;
-                }
+                Console.Write("Podaj swoje imie poszukiwaczu: ");
+                playerService.CreateNewPlayer();
+                MainScreen();
 
                 Console.Clear();
 
-            } while (!isParsed && !endGame);
+            } while (!isParsed);
             Console.Clear();
             Console.WriteLine("Dzięki za zagranie w moją gre! Mam nadzieję, że Ci się podobała");
             Console.ReadKey();
 
         }
-        public static void MainScreen(Player player)
+        public void MainScreen()
         {
             //podstawowe okno dialogowe z wyborem akcji do wykonania oraz podstawowymi danymi danymi
             while (!endGame)
             {
-                ShowBasicData(player.HealthPoints, player.StaminaPoints, player.Level);
+                playerService.ShowBasicData();
 
-                Console.WriteLine($"A więc co planujesz teraz zrobić {player.Name}?");
+                Console.WriteLine($"A więc co planujesz teraz zrobić?");
                 Console.WriteLine("1) Wyrusz na przygode");
                 Console.WriteLine("2) Rozwiń swoją kryjówke");
                 Console.WriteLine("3) Odpocznij");
                 Console.WriteLine("4) Zobacz do plecaka");
-                Console.WriteLine("5) Zapisz gre");
-                Console.WriteLine("6) wyjdź z gry");
+                Console.WriteLine("5) wyjdź z gry");
 
-                switch (GetIntKeyDown(1,6))
+                switch (gameService.GetIntKeyDown(1,5, out isParsed))
                 {
                     case 1:
-                        Travel(player);
+                        Travel();
                         break;
                     case 2:
-                        Build(player);
+                        Build();
                         break;
                     case 3:
-                        Rest(player);
+                        Rest();
                         break;
                     case 4:
-                        OpenBackpack(player);
+                        OpenBackpack();
                         break;
                     case 5:
-                        
-                        break;
-                    case 6:
-                        endGame = true;
+                        EndGame();
                         break;
                     default:
-                        Console.WriteLine();
-                        Console.WriteLine("Nie ma takiej opcji, wybierz jeszcze raz");
-                        Console.ReadKey();
                         break;
                 }
             }
             
         }
 
-        private static int GetIntKeyDown(int min, int max)
+        
+
+        private void Travel()
         {
-            if (int.TryParse(Console.ReadKey().KeyChar.ToString(), out Choice))
+            int Choice;
+            do
             {
-                if (Choice >= min && Choice <= max)
+                playerService.ShowBasicData();
+                //dodać losowy przydział surowców, losowe walki
+
+                Console.WriteLine("Wybierz cel swojej podróży:");
+                Console.WriteLine();
+
+                placeService.ShowPlaceTableData();
+
+                Console.WriteLine("7) Wróć do menu");
+
+                Choice = gameService.GetIntKeyDown(1, 7,out isParsed);
+                if (Choice >= 1 && Choice <= 6)
+                {
+                    
+                    if (placeService.StaminaCheck(Choice, playerService.GetStamina(), out StaminaUse))
+                    {
+                        playerService.UseStamina(StaminaUse);
+                        
+                        placeService.Travelling(Choice);
+                        playerService.AddMaterialsToBackpack(placeService.GetMaterials(Choice,
+                            playerService.GetMultipliers()));
+                        
+                    }
+                    else
+                    {
+                        playerService.ShowBasicData();
+                        Console.WriteLine("Nie możesz się tam udać jesteś zyt zmęczony!");
+                        Console.ReadKey();
+                        isParsed = false;
+                    }
+                }
+                else if (Choice==7)
                 {
                     isParsed = true;
                 }
-                else
-                {
-                    Choice = 0;
-                }
-            }
-            else
-            {
-                Choice = 0;
-            }
-            return Choice;
-        }
 
-        private static void ShowBasicData(int HP, int SP, int Level)
-        {
-            Console.Clear();
-            Console.WriteLine($"HP: {HP}   Stamina: {SP}     Level: {Level}");
-            Console.WriteLine();
-        }
-
-        private static void Travel(Player player)
-        {
-            ShowBasicData(player.HealthPoints, player.StaminaPoints, player.Level);
-            //dodać wybór lokacji, losowy przydział surowców, losowe walki
-            int id = 1;
-            Console.WriteLine("Wybierz cel swojej podróży:");
-            foreach (var item in places)
-            {
-                Console.WriteLine($"{id}) {item.Name}   Level: {item.PrefereLevel},  " +
-                    $" Zużycie wytrzymałości: {item.StaminaUse}");
-                id++;
-            }
-            Console.Read();
+            } while (!isParsed);
         } 
 
-        private static void Build(Player player)
+        private void Build()
         {
-            ShowBasicData(player.HealthPoints, player.StaminaPoints, player.Level);
-            //dodać liste budynków do rozbudowy oraz ich wymagania
+            int Choice;
+            isParsed = false;
+            while (!isParsed)
+            {
+                playerService.ShowBasicData();
+                playerService.ShowBuilding();
+                Choice = gameService.GetIntKeyDown(1, 4, out isParsed);
+                if (Choice<4)
+                {
+                    playerService.Build(Choice);
+                }
+                else if (Choice == 4)
+                {
+                    isParsed = true;
+                }
+            }
 
         }
 
-        private static void Rest(Player player)
+        private void Rest()
         {
-            ShowBasicData(player.HealthPoints, player.StaminaPoints, player.Level);
-            //dodać różne długości snu wraz z wstrzymywaniem programu na dany czas
+            int Choice;
+            isParsed = false;
+            while (!isParsed)
+            {
+                playerService.ShowBasicData();
+
+                Console.WriteLine("1) drzemka (+5 SP   15sek)");
+                Console.WriteLine("2) krótki sen (+10 SP   30sek)");
+                Console.WriteLine("3) sen (+20 SP   45sek)");
+                Console.WriteLine("4) Długi sen (+100 SP   100sek)");
+                Console.WriteLine("5) powrót");
+                Choice = gameService.GetIntKeyDown(1, 5, out isParsed);
+                if (Choice<5)
+                {
+                    playerService.Sleep(Choice);
+                }
+                else if (Choice==5)
+                {
+                    isParsed = true;
+                }
+            }
+        }
+        private void OpenBackpack()
+        {
+
+            int Choice;
+
+            while (!endAction)
+            {
+                playerService.ShowBasicData();
+                playerService.ShowConsumentBackpack();
+                Console.WriteLine("9) powrót");
+                Choice = gameService.GetIntKeyDown(0, 9, out isParsed);
+                
+                if (Choice>0&&Choice<9)
+                {
+                    playerService.UseItem(Choice);
+                }
+                else if (Choice == 9)
+                {
+                    endAction = true;
+                }
+
+
+            }
+            endAction = false;
 
         }
-        private static void OpenBackpack(Player player)
-        {
-            ShowBasicData(player.HealthPoints, player.StaminaPoints, player.Level);
-            //wprowadzenie podziału na przedmiowy konsumpcyjne oraz wyposażenie
 
-        }
-        private static void SaveGame(Player player)
+        private void EndGame()
         {
-            //pokazanie pól zapisów 1-5 z odczytem poziomu zapisanych postaci
-            //w razie pustego zapisu napis "puste"
-            
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Czy napewno chcesz zakończyć grę?");
+                Console.WriteLine("1)Tak");
+                Console.WriteLine("2)Nie");
+                if (gameService.GetIntKeyDown(1, 2, out isParsed) == 1)
+                {
+                    endGame = true;
+                }
+            } while (!isParsed);
         }
-
     }
 }

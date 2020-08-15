@@ -118,7 +118,7 @@ namespace RPGGame.App.Concrete
             Console.WriteLine("Niestety nie udało ci się wygrać swojej walki i zostałeś zjedzony");
             Console.WriteLine("przez zwierzęta... Jedyne co moge dla ciebie zrobić to cofnąć czas");
             Console.WriteLine("do momentu zanim wyruszyłeś na przygodę");
-
+            player.HP = 1;
             Console.ReadKey();
         }
 

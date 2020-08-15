@@ -16,6 +16,7 @@ namespace RPGGame.App.Concrete
             {
                 ItemID = 1,
                 Name = "Surowe mięso",
+                HPRestore = 10,
                 SPRestore = 5,
                 Type = ConsumerType.of_consumer
             };

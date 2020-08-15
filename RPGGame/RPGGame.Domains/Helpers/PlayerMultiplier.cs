@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RPGGame.Characters
+namespace RPGGame.Domains.Helpers
 {
-    public class PlayerMultiplier
+    public class Multiplier
     {
         public double GatheringMultiplier { get; set; }
         public double MiningMultiplier { get; set; }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RPGGame.Places
+namespace RPGGame.Domains.Entity
 {
     public class Place
     {
@@ -12,6 +12,5 @@ namespace RPGGame.Places
         public bool IsMine { get; set; }
         public bool IsPlant { get; set; }
         public bool IsWater { get; set; }
-        public bool IsAnimal { get; set; }
     }
 }

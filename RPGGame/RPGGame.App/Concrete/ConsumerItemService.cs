@@ -1,23 +1,26 @@
-﻿using System;
+﻿using RPGGame.Domains.Common;
+using RPGGame.Domains.Entity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RPGGame.Items
+namespace RPGGame.App.Concrete
 {
-    class ConsumerItemService
+    public class ConsumerItemService
     {
-        private readonly ConsumerItem[] consumerItemTable = new ConsumerItem[9];
+        private readonly ConsumerItem[] Items = new ConsumerItem[8];
 
         public ConsumerItemService()
         {
-            consumerItemTable[0] = new ConsumerItem() {
+            Items[0] = new ConsumerItem()
+            {
                 ItemID = 1,
                 Name = "Surowe mięso",
                 SPRestore = 5,
                 Type = ConsumerType.of_consumer
             };
 
-            consumerItemTable[1] = new ConsumerItem()
+            Items[1] = new ConsumerItem()
             {
                 ItemID = 2,
                 Name = "Drewno",
@@ -25,7 +28,7 @@ namespace RPGGame.Items
                 Type = ConsumerType.neutral
             };
 
-            consumerItemTable[2] = new ConsumerItem()
+            Items[2] = new ConsumerItem()
             {
                 ItemID = 3,
                 Name = "Kamień",
@@ -33,7 +36,7 @@ namespace RPGGame.Items
                 Type = ConsumerType.neutral
             };
 
-            consumerItemTable[3] = new ConsumerItem()
+            Items[3] = new ConsumerItem()
             {
                 ItemID = 4,
                 Name = "żelazo",
@@ -41,7 +44,7 @@ namespace RPGGame.Items
                 Type = ConsumerType.neutral
             };
 
-            consumerItemTable[4] = new ConsumerItem()
+            Items[4] = new ConsumerItem()
             {
                 ItemID = 5,
                 Name = "Owoce",
@@ -49,7 +52,7 @@ namespace RPGGame.Items
                 Type = ConsumerType.of_consumer
             };
 
-            consumerItemTable[5] = new ConsumerItem()
+            Items[5] = new ConsumerItem()
             {
                 ItemID = 6,
                 Name = "Skóra",
@@ -57,7 +60,7 @@ namespace RPGGame.Items
                 Type = ConsumerType.neutral
             };
 
-            consumerItemTable[6] = new ConsumerItem()
+            Items[6] = new ConsumerItem()
             {
                 ItemID = 7,
                 Name = "Butelka wody",
@@ -65,7 +68,7 @@ namespace RPGGame.Items
                 Type = ConsumerType.of_consumer
             };
 
-            consumerItemTable[7] = new ConsumerItem()
+            Items[7] = new ConsumerItem()
             {
                 ItemID = 8,
                 Name = "Ugotowane mięso",
@@ -76,8 +79,8 @@ namespace RPGGame.Items
 
         public ConsumerItem GetTemplateItem(int ID, int quantity)
         {
-            ConsumerItem consumerItem = consumerItemTable[ID];
-            consumerItem.Quantity = 1 + quantity;
+            ConsumerItem consumerItem = Items[ID-1];
+            consumerItem.Quantity =quantity;
             return consumerItem;
         }
     }

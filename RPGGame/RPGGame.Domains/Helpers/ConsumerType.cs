@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RPGGame
+namespace RPGGame.Domains.Entity
 {
     public enum ConsumerType
     {

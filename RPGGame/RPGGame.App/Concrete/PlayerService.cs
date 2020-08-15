@@ -1,14 +1,16 @@
-﻿using RPGGame.Buildings;
+﻿using RPGGame.Domains.Entity;
+using RPGGame.Domains.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading;
+using RPGGame.Domains.Common;
 
-namespace RPGGame.Characters
+namespace RPGGame.App.Concrete
 {
-    class PlayerService
+    public class PlayerService
     {
-
         private Player player;
         private readonly BuildingService buildingService = new BuildingService();
 
@@ -17,9 +19,11 @@ namespace RPGGame.Characters
             player = new Player()
             {
                 Name = Console.ReadLine(),
-
+                HP = 100,
+                ArmorPoints = 10,
+                AtackPoints = 15,
                 StaminaPoints = 100,
-                Multipliers = new PlayerMultiplier()
+                Multipliers = new Multiplier()
                 {
                     GatheringMultiplier = 1.0,
                     HuntingMultipier = 1.0,
@@ -29,12 +33,10 @@ namespace RPGGame.Characters
             };
         }
 
-        
-
         public void ShowBasicData()
         {
             Console.Clear();
-            Console.WriteLine($"Stamina: {player.StaminaPoints}");
+            Console.WriteLine($"HP: {player.HP}   Stamina: {player.StaminaPoints}");
             Console.WriteLine();
         }
 
@@ -42,21 +44,25 @@ namespace RPGGame.Characters
         {
             return player.StaminaPoints;
         }
-        
+        public int GetHP()
+        {
+            return player.HP;
+        }
+
         public void UseStamina(int StaminaUse)
         {
             player.StaminaPoints -= StaminaUse;
         }
 
-        public PlayerMultiplier GetMultipliers()
+        public Multiplier GetMultipliers()
         {
-            PlayerMultiplier playerMultiplier = player.Multipliers;
-            PlayerMultiplier buildingMultiplier = buildingService.GetBuildingsMultipliers();
+            Multiplier playerMultiplier = player.Multipliers;
+            Multiplier buildingMultiplier = buildingService.GetBuildingsMultipliers();
 
             playerMultiplier.GatheringMultiplier += buildingMultiplier.GatheringMultiplier;
             playerMultiplier.HuntingMultipier += buildingMultiplier.HuntingMultipier;
             playerMultiplier.MiningMultiplier += buildingMultiplier.MiningMultiplier;
-            
+
 
             return playerMultiplier;
         }
@@ -66,7 +72,7 @@ namespace RPGGame.Characters
             bool isOwned;
             foreach (var getMaterial in MaterialsGet)
             {
-                if (getMaterial.Quantity <1)
+                if (getMaterial.Quantity < 1)
                 {
                     continue;
                 }
@@ -90,10 +96,13 @@ namespace RPGGame.Characters
         public void ShowConsumentBackpack()
         {
             ShowBasicData();
+
+            player.ConsumerBackpack = player.ConsumerBackpack.OrderBy(p => p.ItemID).ToList();
+
             foreach (var item in player.ConsumerBackpack)
             {
                 Console.Write($"{item.ItemID}) {item.Name}   ");
-                if (item.SPRestore>0)
+                if (item.SPRestore > 0)
                 {
                     Console.Write($"SP: {item.SPRestore}   ");
                 }
@@ -101,14 +110,26 @@ namespace RPGGame.Characters
             }
         }
 
+        public void Dead()
+        {
+            Console.Clear();
+            Console.WriteLine($"przykro mi {player.Name}...");
+            Console.ReadKey();
+            Console.WriteLine("Niestety nie udało ci się wygrać swojej walki i zostałeś zjedzony");
+            Console.WriteLine("przez zwierzęta... Jedyne co moge dla ciebie zrobić to cofnąć czas");
+            Console.WriteLine("do momentu zanim wyruszyłeś na przygodę");
+
+            Console.ReadKey();
+        }
+
         public void UseItem(int id)
         {
             foreach (var item in player.ConsumerBackpack)
             {
-                if (item.ItemID == id && item.Quantity>0 && item.SPRestore > 0)
+                if (item.ItemID == id && item.Quantity > 0 && item.SPRestore > 0)
                 {
                     player.StaminaPoints += item.SPRestore;
-                    if (player.StaminaPoints>100)
+                    if (player.StaminaPoints > 100)
                     {
                         player.StaminaPoints = 100;
                     }
@@ -128,7 +149,7 @@ namespace RPGGame.Characters
                         Console.WriteLine($"Pozostały czas snu: {i}");
                         Thread.Sleep(1000);
                     }
-                    player.StaminaPoints +=5;
+                    player.StaminaPoints += 5;
                     if (player.StaminaPoints > 100)
                     {
                         player.StaminaPoints = 100;
@@ -141,7 +162,7 @@ namespace RPGGame.Characters
                         Console.WriteLine($"Pozostały czas snu: {i}");
                         Thread.Sleep(1000);
                     }
-                    player.StaminaPoints +=10;
+                    player.StaminaPoints += 10;
                     if (player.StaminaPoints > 100)
                     {
                         player.StaminaPoints = 100;
@@ -154,7 +175,7 @@ namespace RPGGame.Characters
                         Console.WriteLine($"Pozostały czas snu: {i}");
                         Thread.Sleep(1000);
                     }
-                    player.StaminaPoints +=20;
+                    player.StaminaPoints += 20;
                     if (player.StaminaPoints > 100)
                     {
                         player.StaminaPoints = 100;
@@ -167,8 +188,8 @@ namespace RPGGame.Characters
                         Console.WriteLine($"Pozostały czas snu: {i}");
                         Thread.Sleep(1000);
                     }
-                    player.StaminaPoints +=100;
-                    if (player.StaminaPoints>100)
+                    player.StaminaPoints += 100;
+                    if (player.StaminaPoints > 100)
                     {
                         player.StaminaPoints = 100;
                     }
@@ -183,35 +204,69 @@ namespace RPGGame.Characters
         {
             buildingService.ShowBuildings();
         }
+
         public void Build(int id)
         {
-            int[] sources = getSources();
-            buildingService.Build(sources[0], sources[1], sources[2], sources[3], id);
+            Requirement sources = getSources();
+            buildingService.Build(sources, id);
         }
 
-        private int[] getSources()
+        public bool MeetAnimal()
         {
-            int[] sources = new int[4];
+            Random random = new Random();
+
+            if (random.Next(0,100)>75)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public BattleData GetBattleData()
+        {
+            BattleData battleData = new BattleData()
+            {
+                Name = player.Name,
+                ArmorPoints = player.ArmorPoints,
+                AtackPoints = player.AtackPoints,
+                HP = player.HP
+            };
+            return battleData;
+        }
+
+        public void SaveBattleData(BattleData battleData)
+        {
+            player.HP = battleData.HP;
+            AddMaterialsToBackpack(battleData.ConsumerLoot);
+        }
+
+        private Requirement getSources()
+        {
+            Requirement req = new Requirement(0,0,0,0);
             foreach (var item in player.ConsumerBackpack)
             {
                 if (item.ItemID == 2)
                 {
-                    sources[0] = item.Quantity;
+                    req.RequirementWood = item.Quantity;
                 }
                 else if (item.ItemID == 3)
                 {
-                    sources[1] = item.Quantity;
+                    req.RequirementStone = item.Quantity;
                 }
                 else if (item.ItemID == 4)
                 {
-                    sources[3] = item.Quantity;
+                    req.RequirementIron = item.Quantity;
                 }
                 else if (item.ItemID == 7)
                 {
-                    sources[2] = item.Quantity;
+                    req.RequirementWater = item.Quantity;
                 }
             }
-            return sources;
+            return req;
         }
     }
 }

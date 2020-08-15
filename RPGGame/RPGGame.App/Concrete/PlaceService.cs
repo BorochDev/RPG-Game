@@ -1,11 +1,11 @@
-﻿using System;
+﻿using RPGGame.Domains.Entity;
+using RPGGame.Domains.Helpers;
+using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Text;
-using RPGGame.Characters;
-using RPGGame.Items;
+using System.Threading;
 
-namespace RPGGame.Places
+namespace RPGGame.App.Concrete
 {
     public class PlaceService
     {
@@ -14,14 +14,13 @@ namespace RPGGame.Places
 
         public PlaceService()
         {
-            consumerItemService = new ConsumerItemService(); //dodanie listy przedmiotów dostępnych
-                                                             //do zdobycia w wyprawach
+            consumerItemService = new ConsumerItemService();
+
             #region AddPlacesTable
             places[0] = new Place()
             {
                 Name = "Wielkie stawy",
                 StaminaUse = 5,
-                IsAnimal = false,
                 IsMine = false,
                 IsPlant = true,
                 IsWater = true,
@@ -32,7 +31,6 @@ namespace RPGGame.Places
             {
                 Name = "Górska przełęcz",
                 StaminaUse = 10,
-                IsAnimal = false,
                 IsMine = true,
                 IsPlant = false,
                 IsWater = false,
@@ -43,7 +41,6 @@ namespace RPGGame.Places
             {
                 Name = "Bagna",
                 StaminaUse = 20,
-                IsAnimal = true,
                 IsMine = false,
                 IsPlant = true,
                 IsWater = true,
@@ -54,7 +51,6 @@ namespace RPGGame.Places
             {
                 Name = "Serce Lasu",
                 StaminaUse = 15,
-                IsAnimal = true,
                 IsMine = false,
                 IsPlant = true,
                 IsWater = false,
@@ -65,7 +61,6 @@ namespace RPGGame.Places
             {
                 Name = "Mroczna jaskinia",
                 StaminaUse = 15,
-                IsAnimal = true,
                 IsMine = true,
                 IsPlant = false,
                 IsWater = false,
@@ -77,7 +72,7 @@ namespace RPGGame.Places
 
         public void ShowPlaceTableData()
         {
-            int id =1;
+            int id = 1;
             foreach (var item in places)
             {
                 Console.WriteLine($"{id}) {item.Name}" +
@@ -86,9 +81,9 @@ namespace RPGGame.Places
                 Console.WriteLine();
             }
         }
-        public bool StaminaCheck(int PlaceID,int PlayerStamina, out int StaminaUse)
+        public bool StaminaCheck(int PlaceID, int PlayerStamina, out int StaminaUse)
         {
-            if (PlayerStamina < places[PlaceID-1].StaminaUse) 
+            if (PlayerStamina < places[PlaceID - 1].StaminaUse)
             {
                 StaminaUse = 0;
 
@@ -96,7 +91,7 @@ namespace RPGGame.Places
             }
             else
             {
-                StaminaUse = places[PlaceID-1].StaminaUse;
+                StaminaUse = places[PlaceID - 1].StaminaUse;
 
                 return true;
             }
@@ -114,17 +109,11 @@ namespace RPGGame.Places
             }
         }
 
-        public List<ConsumerItem> GetMaterials(int PlaceID, PlayerMultiplier Multipliers)
+        public List<ConsumerItem> GetMaterials(int PlaceID, Multiplier Multipliers)
         {
             List<ConsumerItem> MaterialsGet = new List<ConsumerItem>();
             Random random = new Random();
-            if (places[PlaceID].IsAnimal)
-            {
-                MaterialsGet.Add(consumerItemService.GetTemplateItem(0,
-                    (int)(random.NextDouble() * 3 * Multipliers.HuntingMultipier)));
-                MaterialsGet.Add(consumerItemService.GetTemplateItem(5,
-                    (int)(random.NextDouble() * 6 * Multipliers.HuntingMultipier)));
-            }
+            
             if (places[PlaceID].IsMine)
             {
                 MaterialsGet.Add(consumerItemService.GetTemplateItem(2,
@@ -148,7 +137,7 @@ namespace RPGGame.Places
                     (int)(random.NextDouble() * 7 * Multipliers.GatheringMultiplier)));
             }
 
-            
+
             return MaterialsGet;
         }
     }

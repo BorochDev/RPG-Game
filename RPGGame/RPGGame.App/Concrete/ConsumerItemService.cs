@@ -1,8 +1,4 @@
-﻿using RPGGame.Domains.Common;
-using RPGGame.Domains.Entity;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RPGGame.Domains.Entity;
 
 namespace RPGGame.App.Concrete
 {
@@ -80,8 +76,8 @@ namespace RPGGame.App.Concrete
 
         public ConsumerItem GetTemplateItem(int ID, int quantity)
         {
-            ConsumerItem consumerItem = Items[ID-1];
-            consumerItem.Quantity =quantity;
+            ConsumerItem consumerItem = Items[ID - 1];
+            consumerItem.Quantity = quantity;
             return consumerItem;
         }
     }

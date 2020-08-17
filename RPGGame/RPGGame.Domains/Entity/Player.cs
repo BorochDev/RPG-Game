@@ -1,8 +1,6 @@
 ﻿using RPGGame.Domains.Common;
 using RPGGame.Domains.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RPGGame.Domains.Entity
 {

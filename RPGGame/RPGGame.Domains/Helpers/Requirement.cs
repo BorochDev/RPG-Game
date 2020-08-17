@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RPGGame.Domains.Helpers
+﻿namespace RPGGame.Domains.Helpers
 {
     public class Requirement
     {

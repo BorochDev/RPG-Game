@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RPGGame.Domains.Common
+﻿namespace RPGGame.Domains.Common
 {
     public abstract class Item
     {

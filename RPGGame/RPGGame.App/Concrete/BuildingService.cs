@@ -1,8 +1,6 @@
 ﻿using RPGGame.Domains.Entity;
 using RPGGame.Domains.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RPGGame.App.Concrete
 {
@@ -17,7 +15,7 @@ namespace RPGGame.App.Concrete
                 BuildingID = 1,
                 Level = 0,
                 Name = "Tartak",
-                Requirement = new Requirement(35,20,5,10),
+                Requirement = new Requirement(35, 20, 5, 10),
                 Multiplier = new Multiplier
                 {
                     GatheringMultiplier = 0,
@@ -30,7 +28,7 @@ namespace RPGGame.App.Concrete
                 BuildingID = 2,
                 Level = 0,
                 Name = "Kamieniołom",
-                Requirement = new Requirement(25,40,10,20),
+                Requirement = new Requirement(25, 40, 10, 20),
                 Multiplier = new Multiplier
                 {
                     MiningMultiplier = 2,
@@ -44,7 +42,7 @@ namespace RPGGame.App.Concrete
                 BuildingID = 3,
                 Level = 0,
                 Name = "Wieża strzelnicza",
-                Requirement = new Requirement(35,15,20,15),
+                Requirement = new Requirement(35, 15, 20, 15),
                 Multiplier = new Multiplier
                 {
                     HuntingMultipier = 2,
@@ -58,11 +56,11 @@ namespace RPGGame.App.Concrete
         {
             foreach (var item in buildings)
             {
-                 Console.WriteLine($"{item.BuildingID}) {item.Name}   kamień: {item.Requirement.RequirementStone}" +
-                        $"   drewno: {item.Requirement.RequirementWood}  ");
-                 Console.WriteLine($"            woda: {item.Requirement.RequirementWater}" +
-                     $"   żelazo: {item.Requirement.RequirementIron}   Level: {item.Level}");
-                 Console.WriteLine();
+                Console.WriteLine($"{item.BuildingID}) {item.Name}   kamień: {item.Requirement.RequirementStone}" +
+                       $"   drewno: {item.Requirement.RequirementWood}  ");
+                Console.WriteLine($"            woda: {item.Requirement.RequirementWater}" +
+                    $"   żelazo: {item.Requirement.RequirementIron}   Level: {item.Level}");
+                Console.WriteLine();
             }
             Console.WriteLine("4) powrót");
         }
@@ -111,11 +109,11 @@ namespace RPGGame.App.Concrete
                         Console.Clear();
                         Console.WriteLine("Nie masz wystarczająco dużo surowców");
                         Console.ReadKey();
-                        return new Requirement(0,0,0,0);
+                        return new Requirement(0, 0, 0, 0);
                     }
                 }
             }
-            return new Requirement(0,0,0,0);
+            return new Requirement(0, 0, 0, 0);
         }
 
         public Multiplier GetBuildingsMultipliers()
@@ -129,9 +127,9 @@ namespace RPGGame.App.Concrete
 
             for (int i = 0; i < 3; i++)
             {
-                 multiplier.GatheringMultiplier += buildings[i].Multiplier.GatheringMultiplier;
-                 multiplier.MiningMultiplier += buildings[i].Multiplier.MiningMultiplier;
-                 multiplier.HuntingMultipier += buildings[i].Multiplier.HuntingMultipier;
+                multiplier.GatheringMultiplier += buildings[i].Multiplier.GatheringMultiplier;
+                multiplier.MiningMultiplier += buildings[i].Multiplier.MiningMultiplier;
+                multiplier.HuntingMultipier += buildings[i].Multiplier.HuntingMultipier;
             }
 
 

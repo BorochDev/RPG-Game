@@ -2,10 +2,8 @@
 using RPGGame.Domains.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Threading;
-using RPGGame.Domains.Common;
 
 namespace RPGGame.App.Concrete
 {
@@ -215,7 +213,7 @@ namespace RPGGame.App.Concrete
         {
             Random random = new Random();
 
-            if (random.Next(0,100)>75)
+            if (random.Next(0, 100) > 75)
             {
                 return true;
             }
@@ -246,7 +244,7 @@ namespace RPGGame.App.Concrete
 
         private Requirement getSources()
         {
-            Requirement req = new Requirement(0,0,0,0);
+            Requirement req = new Requirement(0, 0, 0, 0);
             foreach (var item in player.ConsumerBackpack)
             {
                 if (item.ItemID == 2)

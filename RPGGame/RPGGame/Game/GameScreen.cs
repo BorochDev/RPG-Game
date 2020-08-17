@@ -1,7 +1,5 @@
 ﻿using RPGGame.App.Concrete;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RPGGame.Game
 {
@@ -54,7 +52,7 @@ namespace RPGGame.Game
                 Console.WriteLine("4) Zobacz do plecaka");
                 Console.WriteLine("5) wyjdź z gry");
 
-                switch (GameService.GetIntKeyDown(1,5, out isParsed))
+                switch (GameService.GetIntKeyDown(1, 5, out isParsed))
                 {
                     case 1:
                         gameService.Travel();
@@ -75,17 +73,17 @@ namespace RPGGame.Game
                         break;
                 }
             }
-            
+
         }
 
-        
 
-        
 
-        
 
-        
-        
+
+
+
+
+
 
 
     }

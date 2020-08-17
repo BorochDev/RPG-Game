@@ -1,18 +1,16 @@
 ﻿using RPGGame.Domains.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RPGGame.App.Concrete
 {
-    public  class GameService
+    public class GameService
     {
         private readonly PlaceService placeService = new PlaceService();
         private readonly PlayerService playerService = new PlayerService();
         private readonly BattleService battleService = new BattleService();
 
-        private  bool isParsed;
-        private  bool endAction;
+        private bool isParsed;
+        private bool endAction;
 
         public static int GetIntKeyDown(int min, int max, out bool isParsed)
         {
@@ -38,17 +36,17 @@ namespace RPGGame.App.Concrete
             return choice;
         }
 
-        public  void CreatePlayer()
+        public void CreatePlayer()
         {
             playerService.CreateNewPlayer();
         }
 
-        public  void ShowPlayerData()
+        public void ShowPlayerData()
         {
             playerService.ShowBasicData();
         }
 
-        public  void Travel()
+        public void Travel()
         {
             int StaminaUse;
             int Choice;
@@ -80,7 +78,7 @@ namespace RPGGame.App.Concrete
                         {
                             BattleData battleData = playerService.GetBattleData();
                             battleService.StartBattle(battleData);
-                            if (playerService.GetHP() > 0) 
+                            if (playerService.GetHP() > 0)
                             {
                                 placeService.Travelling(Choice);
                                 playerService.AddMaterialsToBackpack(placeService.GetMaterials(Choice,
@@ -117,7 +115,7 @@ namespace RPGGame.App.Concrete
             } while (!isParsed);
         }
 
-        public   void Build()
+        public void Build()
         {
             int Choice;
             isParsed = false;
@@ -138,7 +136,7 @@ namespace RPGGame.App.Concrete
 
         }
 
-        public  void Rest()
+        public void Rest()
         {
             int Choice;
             isParsed = false;
@@ -163,7 +161,7 @@ namespace RPGGame.App.Concrete
             }
         }
 
-        public  void OpenBackpack()
+        public void OpenBackpack()
         {
 
             int Choice;
@@ -190,7 +188,7 @@ namespace RPGGame.App.Concrete
 
         }
 
-        public  bool EndGame()
+        public bool EndGame()
         {
             bool endGame = false;
             do

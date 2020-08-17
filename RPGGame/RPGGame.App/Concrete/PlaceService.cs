@@ -2,7 +2,6 @@
 using RPGGame.Domains.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace RPGGame.App.Concrete
@@ -113,7 +112,7 @@ namespace RPGGame.App.Concrete
         {
             List<ConsumerItem> MaterialsGet = new List<ConsumerItem>();
             Random random = new Random();
-            
+
             if (places[PlaceID].IsMine)
             {
                 MaterialsGet.Add(consumerItemService.GetTemplateItem(2,

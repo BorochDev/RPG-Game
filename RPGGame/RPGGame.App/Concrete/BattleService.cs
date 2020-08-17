@@ -1,9 +1,7 @@
 ﻿using RPGGame.Domains.Entity;
 using RPGGame.Domains.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace RPGGame.App.Concrete
@@ -17,7 +15,7 @@ namespace RPGGame.App.Concrete
         {
             ConsumerItem[] consumerItem = new ConsumerItem[2];
             Random random = new Random();
-            consumerItem[0] = consumerService.GetTemplateItem(1,random.Next(0,4));
+            consumerItem[0] = consumerService.GetTemplateItem(1, random.Next(0, 4));
             consumerItem[1] = consumerService.GetTemplateItem(6, random.Next(0, 5));
             enemies[0] = new Enemy
             {
@@ -68,7 +66,7 @@ namespace RPGGame.App.Concrete
                 Name = "pancernik",
                 HP = 15,
                 ArmorPoints = 30,
-                AtackPoints =5,
+                AtackPoints = 5,
                 Loot = consumerItem,
                 CanRunAway = true
             };
@@ -79,21 +77,21 @@ namespace RPGGame.App.Concrete
                 Name = "Król Lasu",
                 HP = 50,
                 ArmorPoints = 25,
-                AtackPoints =30,
+                AtackPoints = 30,
                 Loot = consumerItem,
                 CanRunAway = false
             };
-            
+
         }
 
         public BattleData StartBattle(BattleData player)
         {
             Random random = new Random();
-            Enemy enemy = enemies[random.Next(0,5)];
+            Enemy enemy = enemies[random.Next(0, 5)];
             bool isParsed = false;
             int Choice = 0;
             int atack;
-            
+
 
             Console.Clear();
             Console.WriteLine($"Podczas swojej podróży napotykasz się na {enemy.Name}");
@@ -111,13 +109,13 @@ namespace RPGGame.App.Concrete
                 case 1:
                     while (player.HP > 0 && enemy.HP > 0)
                     {
-                        
-                        atack = (int)(random.Next(50,200)/100 * player.AtackPoints)
+
+                        atack = (int)(random.Next(50, 200) / 100 * player.AtackPoints)
                                 - (int)(random.NextDouble() * enemy.ArmorPoints / 2);
                         Console.WriteLine($"{enemy.Name} otrzymuje {atack} obrażeń");
                         enemy.HP -= atack;
                         Thread.Sleep(1500);
-                        if (enemy.HP>0)
+                        if (enemy.HP > 0)
                         {
                             atack = (int)(random.Next(50, 200) / 100 * enemy.AtackPoints)
                                     - (int)(random.NextDouble() * player.ArmorPoints / 2);
@@ -137,7 +135,7 @@ namespace RPGGame.App.Concrete
                     }
                     else
                     {
-                        
+
                         Console.WriteLine("Biegłeś ile sił w nogach ale niestety");
                         Console.WriteLine("byłeś zbyt wolny... musisz walczyć!");
                         Console.ReadKey();
@@ -161,7 +159,7 @@ namespace RPGGame.App.Concrete
                     break;
             }
 
-            if (player.HP>0)
+            if (player.HP > 0)
             {
                 Console.WriteLine($"Gratulacje udało ci się pokonać {enemy.Name}");
                 player.ConsumerLoot = enemy.Loot.ToList();

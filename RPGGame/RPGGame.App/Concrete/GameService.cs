@@ -1,5 +1,7 @@
-﻿using RPGGame.Domains.Helpers;
+﻿using RPGGame.Domains.Entity;
+using RPGGame.Domains.Helpers;
 using System;
+using System.Collections.Generic;
 
 namespace RPGGame.App.Concrete
 {
@@ -38,7 +40,7 @@ namespace RPGGame.App.Concrete
 
         public void CreatePlayer()
         {
-            playerService.CreateNewPlayer();
+            playerService.SetName();
         }
 
         public void ShowPlayerData()
@@ -62,10 +64,10 @@ namespace RPGGame.App.Concrete
 
                 placeService.ShowPlaceTableData();
 
-                Console.WriteLine("7) Wróć do menu");
+                Console.WriteLine("6) Wróć do menu");
 
-                Choice = GetIntKeyDown(1, 7, out isParsed);
-                if (Choice >= 1 && Choice <= 6)
+                Choice = GetIntKeyDown(1, 6, out isParsed);
+                if (Choice >= 1 && Choice <= 5)
                 {
 
                     if (placeService.StaminaCheck(Choice, playerService.GetStamina(), out StaminaUse))
@@ -107,7 +109,7 @@ namespace RPGGame.App.Concrete
                         isParsed = false;
                     }
                 }
-                else if (Choice == 7)
+                else if (Choice == 6)
                 {
                     isParsed = true;
                 }
@@ -126,7 +128,21 @@ namespace RPGGame.App.Concrete
                 Choice = GetIntKeyDown(1, 4, out isParsed);
                 if (Choice < 4)
                 {
-                    playerService.Build(Choice);
+                    var req = playerService.Build(Choice);
+                    if (req.IsZero())
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Nie masz wystarczająco dużo surowców");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Udało ci się rozbudować budynek");
+                        Console.ReadKey();
+                        playerService.UseSources(req);
+                    }
+
                 }
                 else if (Choice == 4)
                 {
@@ -169,7 +185,17 @@ namespace RPGGame.App.Concrete
             while (!endAction)
             {
                 playerService.ShowBasicData();
-                playerService.ShowConsumentBackpack();
+                List<ConsumerItem> backpack = playerService.GetBackpack();
+
+                foreach (var item in backpack)
+                {
+                    Console.Write($"{item.ItemID}) {item.Name}   ");
+                    if (item.SPRestore > 0)
+                    {
+                        Console.Write($"SP: {item.SPRestore}   ");
+                    }
+                    Console.WriteLine($"Ilość: {item.Quantity}");
+                }
                 Console.WriteLine("9) powrót");
                 Choice = GetIntKeyDown(0, 9, out isParsed);
 

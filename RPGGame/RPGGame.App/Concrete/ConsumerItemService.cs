@@ -8,6 +8,10 @@ namespace RPGGame.App.Concrete
 
         public ConsumerItemService()
         {
+            BuildTable();
+        }
+        private void BuildTable()
+        {
             Items[0] = new ConsumerItem()
             {
                 ItemID = 1,
@@ -73,7 +77,6 @@ namespace RPGGame.App.Concrete
                 Type = ConsumerType.of_consumer
             };
         }
-
         public ConsumerItem GetTemplateItem(int ID, int quantity)
         {
             ConsumerItem consumerItem = Items[ID - 1];

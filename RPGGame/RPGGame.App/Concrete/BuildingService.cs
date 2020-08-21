@@ -10,6 +10,11 @@ namespace RPGGame.App.Concrete
 
         public BuildingService()
         {
+            BuildTable();
+        }
+
+        private void BuildTable()
+        {
             buildings[0] = new Building()
             {
                 BuildingID = 1,
@@ -67,6 +72,7 @@ namespace RPGGame.App.Concrete
 
         public Requirement Build(Requirement sources, int id)
         {
+            
             foreach (var item in buildings)
             {
                 if (item.BuildingID == id)
@@ -77,7 +83,13 @@ namespace RPGGame.App.Concrete
                         sources.RequirementIron >= item.Requirement.RequirementIron)
                     {
                         item.Level++;
-                        sources = item.Requirement;
+
+                        int wood = item.Requirement.RequirementWood;
+                        int water = item.Requirement.RequirementWater;
+                        int stone = item.Requirement.RequirementStone;
+                        int iron = item.Requirement.RequirementIron;
+
+                        sources = new Requirement(wood, stone, iron, water);
 
                         item.Requirement.RequirementIron *= 2;
                         item.Requirement.RequirementStone *= 2;
@@ -98,17 +110,11 @@ namespace RPGGame.App.Concrete
                             default:
                                 break;
                         }
-
-                        Console.Clear();
-                        Console.WriteLine($"Udało ci się rozbudować {item.Name}");
-                        Console.ReadKey();
                         return sources;
                     }
                     else
                     {
-                        Console.Clear();
-                        Console.WriteLine("Nie masz wystarczająco dużo surowców");
-                        Console.ReadKey();
+
                         return new Requirement(0, 0, 0, 0);
                     }
                 }

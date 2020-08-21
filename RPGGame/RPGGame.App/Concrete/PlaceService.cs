@@ -14,8 +14,11 @@ namespace RPGGame.App.Concrete
         public PlaceService()
         {
             consumerItemService = new ConsumerItemService();
+            BuildTable();
+        }
 
-            #region AddPlacesTable
+        private void BuildTable()
+        {
             places[0] = new Place()
             {
                 Name = "Wielkie stawy",
@@ -65,8 +68,6 @@ namespace RPGGame.App.Concrete
                 IsWater = false,
                 IsWood = false,
             };
-
-            #endregion
         }
 
         public void ShowPlaceTableData()
@@ -110,30 +111,31 @@ namespace RPGGame.App.Concrete
 
         public List<ConsumerItem> GetMaterials(int PlaceID, Multiplier Multipliers)
         {
+            PlaceID--;
             List<ConsumerItem> MaterialsGet = new List<ConsumerItem>();
             Random random = new Random();
 
             if (places[PlaceID].IsMine)
             {
-                MaterialsGet.Add(consumerItemService.GetTemplateItem(2,
-                    (int)(random.NextDouble() * 8 * Multipliers.MiningMultiplier)));
                 MaterialsGet.Add(consumerItemService.GetTemplateItem(3,
-                    (int)(random.NextDouble() * 3 * Multipliers.MiningMultiplier)));
+                    1 + (int)(random.NextDouble() * 8 * Multipliers.MiningMultiplier)));
+                MaterialsGet.Add(consumerItemService.GetTemplateItem(4,
+                    1 + (int)(random.NextDouble() * 3 * Multipliers.MiningMultiplier)));
             }
             if (places[PlaceID].IsPlant)
             {
-                MaterialsGet.Add(consumerItemService.GetTemplateItem(4,
-                    (int)(random.NextDouble() * 5 * Multipliers.GatheringMultiplier)));
+                MaterialsGet.Add(consumerItemService.GetTemplateItem(5,
+                    1 + (int)(random.NextDouble() * 5 * Multipliers.GatheringMultiplier)));
             }
             if (places[PlaceID].IsWater)
             {
                 MaterialsGet.Add(consumerItemService.GetTemplateItem(6,
-                    (int)(random.NextDouble() * 4 * Multipliers.GatheringMultiplier)));
+                    1 + (int)(random.NextDouble() * 4 * Multipliers.GatheringMultiplier)));
             }
             if (places[PlaceID].IsWood)
             {
-                MaterialsGet.Add(consumerItemService.GetTemplateItem(1,
-                    (int)(random.NextDouble() * 7 * Multipliers.GatheringMultiplier)));
+                MaterialsGet.Add(consumerItemService.GetTemplateItem(2,
+                    1 + (int)(random.NextDouble() * 7 * Multipliers.GatheringMultiplier)));
             }
 
 

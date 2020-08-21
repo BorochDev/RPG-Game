@@ -13,6 +13,11 @@ namespace RPGGame.App.Concrete
 
         public BattleService()
         {
+            BuildTable();
+        }
+
+        private void BuildTable()
+        {
             ConsumerItem[] consumerItem = new ConsumerItem[2];
             Random random = new Random();
             consumerItem[0] = consumerService.GetTemplateItem(1, random.Next(0, 4));
@@ -81,7 +86,6 @@ namespace RPGGame.App.Concrete
                 Loot = consumerItem,
                 CanRunAway = false
             };
-
         }
 
         public BattleData StartBattle(BattleData player)

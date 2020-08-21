@@ -9,14 +9,13 @@ namespace RPGGame.App.Concrete
 {
     public class PlayerService
     {
-        private Player player;
+        private readonly Player player;
         private readonly BuildingService buildingService = new BuildingService();
 
-        public void CreateNewPlayer()
+        public PlayerService()
         {
             player = new Player()
             {
-                Name = Console.ReadLine(),
                 HP = 100,
                 ArmorPoints = 10,
                 AtackPoints = 15,
@@ -29,6 +28,11 @@ namespace RPGGame.App.Concrete
                 },
                 ConsumerBackpack = new List<ConsumerItem>()
             };
+        }
+
+        public void SetName()
+        {
+            player.Name = Console.ReadLine();
         }
 
         public void ShowBasicData()
@@ -50,6 +54,10 @@ namespace RPGGame.App.Concrete
         public void UseStamina(int StaminaUse)
         {
             player.StaminaPoints -= StaminaUse;
+            if (player.StaminaPoints<0)
+            {
+                player.StaminaPoints = 0;
+            }
         }
 
         public Multiplier GetMultipliers()
@@ -89,23 +97,12 @@ namespace RPGGame.App.Concrete
                     player.ConsumerBackpack.Add(getMaterial);
                 }
             }
+            player.ConsumerBackpack = player.ConsumerBackpack.OrderBy(p => p.ItemID).ToList();
         }
 
-        public void ShowConsumentBackpack()
+        public List<ConsumerItem> GetBackpack()
         {
-            ShowBasicData();
-
-            player.ConsumerBackpack = player.ConsumerBackpack.OrderBy(p => p.ItemID).ToList();
-
-            foreach (var item in player.ConsumerBackpack)
-            {
-                Console.Write($"{item.ItemID}) {item.Name}   ");
-                if (item.SPRestore > 0)
-                {
-                    Console.Write($"SP: {item.SPRestore}   ");
-                }
-                Console.WriteLine($"Ilość: {item.Quantity}");
-            }
+            return player.ConsumerBackpack;
         }
 
         public void Dead()
@@ -203,10 +200,12 @@ namespace RPGGame.App.Concrete
             buildingService.ShowBuildings();
         }
 
-        public void Build(int id)
+        public Requirement Build(int id)
         {
             Requirement sources = getSources();
-            buildingService.Build(sources, id);
+            Requirement usedSources = buildingService.Build(sources, id);
+
+            return usedSources;
         }
 
         public bool MeetAnimal()
@@ -242,7 +241,7 @@ namespace RPGGame.App.Concrete
             AddMaterialsToBackpack(battleData.ConsumerLoot);
         }
 
-        private Requirement getSources()
+        public Requirement getSources()
         {
             Requirement req = new Requirement(0, 0, 0, 0);
             foreach (var item in player.ConsumerBackpack)
@@ -265,6 +264,29 @@ namespace RPGGame.App.Concrete
                 }
             }
             return req;
+        }
+
+        public void UseSources(Requirement requirement)
+        {
+            foreach (var item in player.ConsumerBackpack)
+            {
+                if (item.Name == "Drewno")
+                {
+                    item.Quantity -= requirement.RequirementWood;
+                }
+                if (item.Name == "Kamień")
+                {
+                    item.Quantity -= requirement.RequirementStone;
+                }
+                if (item.Name == "żelazo")
+                {
+                    item.Quantity -= requirement.RequirementIron;
+                }
+                if (item.Name == "Butelka wody")
+                {
+                    item.Quantity -= requirement.RequirementWater;
+                }
+            }
         }
     }
 }

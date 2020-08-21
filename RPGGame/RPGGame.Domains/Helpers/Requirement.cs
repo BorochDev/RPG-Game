@@ -14,5 +14,28 @@
             RequirementIron = iron;
             RequirementWater = water;
         }
+
+        public bool IsZero()
+        {
+            bool zero = true;
+            if (RequirementIron >0)
+            {
+                zero = false;
+            }
+            else if (RequirementWood > 0)
+            {
+                zero = false;
+            }
+            else if (RequirementWater > 0)
+            {
+                zero = false;
+            }
+            else if (RequirementStone > 0)
+            {
+                zero = false;
+            }
+
+            return zero;
+        }
     }
 }

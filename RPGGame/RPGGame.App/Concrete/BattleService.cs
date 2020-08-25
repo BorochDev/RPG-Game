@@ -1,4 +1,5 @@
-﻿using RPGGame.Domains.Entity;
+﻿using RPGGame.App.Managers;
+using RPGGame.Domains.Entity;
 using RPGGame.Domains.Helpers;
 using System;
 using System.Linq;
@@ -88,89 +89,12 @@ namespace RPGGame.App.Concrete
             };
         }
 
-        public BattleData StartBattle(BattleData player)
+        public Enemy GetEnemy()
         {
             Random random = new Random();
             Enemy enemy = enemies[random.Next(0, 5)];
-            bool isParsed = false;
-            int Choice = 0;
-            int atack;
 
-
-            Console.Clear();
-            Console.WriteLine($"Podczas swojej podróży napotykasz się na {enemy.Name}");
-            Console.WriteLine("Chyba nie jest zbyt zadowolony twoją obecnością.  Lepiej na siebie uważaj");
-            Console.ReadKey();
-            while (!isParsed)
-            {
-                Console.Clear();
-                Console.WriteLine("1)Walka");
-                Console.WriteLine("2)Ucieczka");
-                Choice = GameService.GetIntKeyDown(1, 2, out isParsed);
-            }
-            switch (Choice)
-            {
-                case 1:
-                    while (player.HP > 0 && enemy.HP > 0)
-                    {
-
-                        atack = (int)(random.Next(50, 200) / 100 * player.AtackPoints)
-                                - (int)(random.NextDouble() * enemy.ArmorPoints / 2);
-                        Console.WriteLine($"{enemy.Name} otrzymuje {atack} obrażeń");
-                        enemy.HP -= atack;
-                        Thread.Sleep(1500);
-                        if (enemy.HP > 0)
-                        {
-                            atack = (int)(random.Next(50, 200) / 100 * enemy.AtackPoints)
-                                    - (int)(random.NextDouble() * player.ArmorPoints / 2);
-                            Console.WriteLine($"{player.Name} otrzymuje {atack} obrażeń");
-                            player.HP -= atack;
-                            Thread.Sleep(1500);
-                        }
-                    }
-                    break;
-                case 2:
-                    if (enemy.CanRunAway)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Tym razem udało ci się uciec.");
-                        Console.ReadKey();
-                        return player;
-                    }
-                    else
-                    {
-
-                        Console.WriteLine("Biegłeś ile sił w nogach ale niestety");
-                        Console.WriteLine("byłeś zbyt wolny... musisz walczyć!");
-                        Console.ReadKey();
-                        while (player.HP > 0 && enemy.HP > 0)
-                        {
-                            Console.Clear();
-                            atack = (int)(random.Next(50, 200) / 100 * enemy.AtackPoints)
-                                    - (int)(random.NextDouble() * player.ArmorPoints / 2);
-                            Console.WriteLine($"{player.Name} otrzymuje {atack} obrażeń");
-                            player.HP -= atack;
-                            Thread.Sleep(1500);
-                            atack = (int)(random.Next(50, 200) / 100 * player.AtackPoints)
-                                    - (int)(random.NextDouble() * enemy.ArmorPoints / 2);
-                            Console.WriteLine($"{enemy.Name} otrzymuje {atack} obrażeń");
-                            enemy.HP -= atack;
-                            Thread.Sleep(1500);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            if (player.HP > 0)
-            {
-                Console.WriteLine($"Gratulacje udało ci się pokonać {enemy.Name}");
-                player.ConsumerLoot = enemy.Loot.ToList();
-            }
-
-            Console.ReadKey();
-            return player;
+            return enemy;
         }
     }
 }

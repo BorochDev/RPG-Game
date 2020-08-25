@@ -56,18 +56,15 @@ namespace RPGGame.App.Concrete
                 }
             };
         }
+        
+        public Building[] GetBuildingsTable()
+        {
+            return buildings;
+        }
 
         public void ShowBuildings()
         {
-            foreach (var item in buildings)
-            {
-                Console.WriteLine($"{item.BuildingID}) {item.Name}   kamień: {item.Requirement.RequirementStone}" +
-                       $"   drewno: {item.Requirement.RequirementWood}  ");
-                Console.WriteLine($"            woda: {item.Requirement.RequirementWater}" +
-                    $"   żelazo: {item.Requirement.RequirementIron}   Level: {item.Level}");
-                Console.WriteLine();
-            }
-            Console.WriteLine("4) powrót");
+
         }
 
         public Requirement Build(Requirement sources, int id)

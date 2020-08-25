@@ -30,16 +30,14 @@ namespace RPGGame.App.Concrete
             };
         }
 
-        public void SetName()
+        public void SetName(string name)
         {
-            player.Name = Console.ReadLine();
+            player.Name = name;
         }
 
-        public void ShowBasicData()
+        public int[] GetBasicData()
         {
-            Console.Clear();
-            Console.WriteLine($"HP: {player.HP}   Stamina: {player.StaminaPoints}");
-            Console.WriteLine();
+            return new int[] { player.HP, player.StaminaPoints };
         }
 
         public int GetStamina()
@@ -75,7 +73,9 @@ namespace RPGGame.App.Concrete
 
         public void AddMaterialsToBackpack(List<ConsumerItem> MaterialsGet)
         {
+            int quantity;
             bool isOwned;
+            var backpack = player.ConsumerBackpack;
             foreach (var getMaterial in MaterialsGet)
             {
                 if (getMaterial.Quantity < 1)
@@ -87,14 +87,15 @@ namespace RPGGame.App.Concrete
                 {
                     if (backpackItem.ItemID == getMaterial.ItemID)
                     {
-                        backpackItem.Quantity += getMaterial.Quantity;
+                        quantity = getMaterial.Quantity;
+                        backpackItem.Quantity += quantity;
                         isOwned = true;
                         break;
                     }
                 }
                 if (!isOwned)
                 {
-                    player.ConsumerBackpack.Add(getMaterial);
+                    backpack.Add(getMaterial);
                 }
             }
             player.ConsumerBackpack = player.ConsumerBackpack.OrderBy(p => p.ItemID).ToList();
@@ -102,97 +103,57 @@ namespace RPGGame.App.Concrete
 
         public List<ConsumerItem> GetBackpack()
         {
-            return player.ConsumerBackpack;
+            return player.ConsumerBackpack.Where(i=>i.Quantity > 0).ToList();
         }
 
-        public void Dead()
+        public int Dead()
         {
-            Console.Clear();
-            Console.WriteLine($"przykro mi {player.Name}...");
-            Console.ReadKey();
-            Console.WriteLine("Niestety nie udało ci się wygrać swojej walki i zostałeś zjedzony");
-            Console.WriteLine("przez zwierzęta... Jedyne co moge dla ciebie zrobić to cofnąć czas");
-            Console.WriteLine("do momentu zanim wyruszyłeś na przygodę");
             player.HP = 1;
-            Console.ReadKey();
+
+            return player.HP;
         }
 
         public void UseItem(int id)
         {
             foreach (var item in player.ConsumerBackpack)
             {
-                if (item.ItemID == id && item.Quantity > 0 && item.SPRestore > 0)
+                if (item.ItemID == id && item.Quantity > 0 && (item.SPRestore > 0 || item.HPRestore > 0))
                 {
-                    player.StaminaPoints += item.SPRestore;
-                    if (player.StaminaPoints > 100)
-                    {
-                        player.StaminaPoints = 100;
-                    }
+                    AddHP(item.HPRestore);
+                    AddStamina(item.SPRestore);
                     item.Quantity--;
                 }
             }
         }
 
-        public void Sleep(int option)
+        public int GetSleepTime(int option)
         {
-            switch (option)
+            return option switch
             {
-                case 1:
-                    for (int i = 15; i > 0; i--)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"Pozostały czas snu: {i}");
-                        Thread.Sleep(1000);
-                    }
-                    player.StaminaPoints += 5;
-                    if (player.StaminaPoints > 100)
-                    {
-                        player.StaminaPoints = 100;
-                    }
-                    break;
-                case 2:
-                    for (int i = 30; i > 0; i--)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"Pozostały czas snu: {i}");
-                        Thread.Sleep(1000);
-                    }
-                    player.StaminaPoints += 10;
-                    if (player.StaminaPoints > 100)
-                    {
-                        player.StaminaPoints = 100;
-                    }
-                    break;
-                case 3:
-                    for (int i = 45; i > 0; i--)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"Pozostały czas snu: {i}");
-                        Thread.Sleep(1000);
-                    }
-                    player.StaminaPoints += 20;
-                    if (player.StaminaPoints > 100)
-                    {
-                        player.StaminaPoints = 100;
-                    }
-                    break;
-                case 4:
-                    for (int i = 100; i > 0; i--)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"Pozostały czas snu: {i}");
-                        Thread.Sleep(1000);
-                    }
-                    player.StaminaPoints += 100;
-                    if (player.StaminaPoints > 100)
-                    {
-                        player.StaminaPoints = 100;
-                    }
-                    break;
-                default:
-                    break;
-            }
+                1 => 15,
+                2 => 30,
+                3 => 45,
+                4 => 100,
+                _ => 0,
+            };
+        }
 
+        public void AddStamina(int stamina)
+        {
+            player.StaminaPoints += stamina;
+            if (player.StaminaPoints>100)
+            {
+                player.StaminaPoints = 100;
+            }
+        }
+
+        public void AddHP(int hp)
+        {
+            player.HP += hp;
+            if (player.HP > 100)
+            {
+                player.HP = 100;
+            }
         }
 
         public void ShowBuilding()

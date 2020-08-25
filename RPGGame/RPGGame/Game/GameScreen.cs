@@ -1,15 +1,16 @@
 ﻿using RPGGame.App.Concrete;
+using RPGGame.App.Managers;
 using System;
 
 namespace RPGGame.Game
 {
     public class GameScreen
     {
-        readonly GameService gameService;
+        readonly GameManager gameService;
 
         public GameScreen()
         {
-            gameService = new GameService();
+            gameService = new GameManager();
         }
 
         private bool isParsed = false;
@@ -52,7 +53,7 @@ namespace RPGGame.Game
                 Console.WriteLine("4) Zobacz do plecaka");
                 Console.WriteLine("5) wyjdź z gry");
 
-                switch (GameService.GetIntKeyDown(1, 5, out isParsed))
+                switch (GameManager.GetIntKeyDown(1, 5, out isParsed))
                 {
                     case 1:
                         gameService.Travel();

@@ -2,6 +2,7 @@
 using RPGGame.Domains.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace RPGGame.App.Concrete
@@ -70,16 +71,9 @@ namespace RPGGame.App.Concrete
             };
         }
 
-        public void ShowPlaceTableData()
+        public Place[] GetPlaceData()
         {
-            int id = 1;
-            foreach (var item in places)
-            {
-                Console.WriteLine($"{id}) {item.Name}" +
-                    $"   Zużycie wytrzymałości: {item.StaminaUse}");
-                id++;
-                Console.WriteLine();
-            }
+            return places;
         }
         public bool StaminaCheck(int PlaceID, int PlayerStamina, out int StaminaUse)
         {
@@ -97,16 +91,10 @@ namespace RPGGame.App.Concrete
             }
         }
 
-        public void Travelling(int PlaceID)
+        public int GetTravellingTime(int PlaceID)
         {
             PlaceID--;
-            Console.Clear();
-            for (int i = places[PlaceID].StaminaUse * 5; i > 0; i--)
-            {
-                Console.WriteLine($"Dotrzesz do celu podróży za: {i}");
-                Thread.Sleep(1000);
-                Console.Clear();
-            }
+            return places[PlaceID].StaminaUse * 5;
         }
 
         public List<ConsumerItem> GetMaterials(int PlaceID, Multiplier Multipliers)
